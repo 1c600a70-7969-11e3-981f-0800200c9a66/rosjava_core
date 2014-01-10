@@ -18,6 +18,7 @@ include(
     'apache_xmlrpc_client',
     'apache_xmlrpc_common',
     'apache_xmlrpc_server',
+    'apache_ws_commons_util',
     'docs',
     'rosjava',
     'rosjava_benchmarks',
