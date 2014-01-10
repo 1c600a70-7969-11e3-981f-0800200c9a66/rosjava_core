@@ -1,12 +1,12 @@
 /*
  * Copyright 2003, 2004  The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,20 +66,20 @@ public class XMLWriterImpl implements XMLWriter {
 	public Writer getWriter() {
 		return w;
 	}
-	
+
 	/** Sets the locator.
 	 *
 	 * @param pLocator A locator for use in case of errors
 	 * @see #getDocumentLocator
 	 */
 	public void setDocumentLocator(Locator pLocator) { l = pLocator; }
-	
+
 	/** Returns the locator
 	 * @return A locator previously set with setDocumentLocator or null.
 	 * @see #setDocumentLocator
 	 */
 	public Locator getDocumentLocator() { return l; }
-	
+
 	/**
 	 * <p>Starts use of a namespace prefix.</p>
 	 *
@@ -102,7 +102,7 @@ public class XMLWriterImpl implements XMLWriter {
 		}
 		delayedPrefixes.put(prefix, namespaceURI);
 	}
-	
+
 	/** <p>Terminates use of a namespace prefix.</p>
 	 *
 	 * @param prefix The prefix being abandoned.
@@ -118,7 +118,7 @@ public class XMLWriterImpl implements XMLWriter {
 			delayedPrefixes.remove(prefix);
 		}
 	}
-	
+
 	/** <p>Starts a document.</p>
 	 * @throws SAXException Not actually thrown, just for compliance to the interface specification.
 	 */
@@ -149,13 +149,13 @@ public class XMLWriterImpl implements XMLWriter {
 			}
 		}
 	}
-	
+
 	/** <p>This method finishs the handlers action. After calling endDocument you
 	 * may start a new action by calling startDocument again.</p>
 	 *
 	 * @throws SAXException Not actually thrown, just for compliance to the
 	 *   interface specification.
-	 */  
+	 */
 	public void endDocument() throws SAXException {
 		if (isFlushing()  &&  w != null) {
 			try {
@@ -165,18 +165,18 @@ public class XMLWriterImpl implements XMLWriter {
 			}
 		}
 	}
-	
+
 	/** Calls the character method with the same arguments.
 	 * @param ch A string of whitespace characters being inserted into the document.
 	 * @param start The index of the first character.
 	 * @param length The number of characters.
 	 * @throws SAXException Thrown in case of an IOException.
-	 */  
+	 */
 	public void ignorableWhitespace(char[] ch, int start, int length)
 	throws SAXException {
 		characters(ch, start, length);
 	}
-	
+
 	private void stopTerminator() throws java.io.IOException {
 		if (state == STATE_IN_START_ELEMENT) {
 			if (w != null) {
@@ -185,13 +185,13 @@ public class XMLWriterImpl implements XMLWriter {
 			state = STATE_IN_ELEMENT;
 		}
 	}
-	
+
 	/** Inserts a string of characters into the document.
 	 * @param ch The characters being inserted. A substring, to be precise.
 	 * @param start Index of the first character
 	 * @param length Number of characters being inserted
 	 * @throws SAXException Thrown in case of an IOException
-	 */  
+	 */
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		try {
 			stopTerminator();
@@ -222,12 +222,12 @@ public class XMLWriterImpl implements XMLWriter {
 			throw new SAXException(e);
 		}
 	}
-	
+
 	public boolean canEncode(char c) {
 		return c == '\n'  ||  (c >= ' '  &&  c < 0x7f);
 	}
-	
-	
+
+
 	/** <p>Terminates an element.</p>
 	 *
 	 * @param namespaceURI The namespace URI, if any, or null
@@ -243,7 +243,7 @@ public class XMLWriterImpl implements XMLWriter {
 		if (w != null) {
 			try {
 				if (state == STATE_IN_START_ELEMENT) {
-					w.write("/>");
+					w.write("></" + qName + ">");
 					state = STATE_OUTSIDE;
 				} else {
 					if (state == STATE_OUTSIDE) {
@@ -259,7 +259,7 @@ public class XMLWriterImpl implements XMLWriter {
 			}
 		}
 	}
-	
+
 	private void indentMe() throws java.io.IOException {
 		if (w != null) {
 			if (isIndenting()) {
@@ -276,7 +276,7 @@ public class XMLWriterImpl implements XMLWriter {
 			}
 		}
 	}
-	
+
 	private void writeCData(String v) throws java.io.IOException {
 		int len = v.length();
 		for (int j = 0;  j < len;  j++) {
@@ -299,7 +299,7 @@ public class XMLWriterImpl implements XMLWriter {
 			}
 		}
 	}
-	
+
 	/** Starts a new element.
 	 *
 	 * @param namespaceURI The namespace URI, if any, or null
@@ -318,7 +318,7 @@ public class XMLWriterImpl implements XMLWriter {
 				}
 				curIndent++;
 			}
-			
+
 			if (w != null) {
 				w.write('<');
 				w.write(qName);
@@ -353,22 +353,22 @@ public class XMLWriterImpl implements XMLWriter {
 			throw new SAXException(e);
 		}
 	}
-	
+
 	/** Not actually implemented, because I don't know how to skip entities.
 	 *
 	 * @param ent The entity being skipped.
 	 * @throws SAXException Not actually thrown, just for compliance to the interface specification.
-	 */  
+	 */
 	public void skippedEntity(String ent) throws SAXException {
 		throw new SAXException("Don't know how to skip entities");
 	}
-	
+
 	/** Inserts a processing instruction.
 	 *
 	 * @param target The PI target
 	 * @param data The PI data
 	 * @throws SAXException Thrown in case of an IOException
-	 */  
+	 */
 	public void processingInstruction(String target, String data)
 	throws SAXException {
 		try {
