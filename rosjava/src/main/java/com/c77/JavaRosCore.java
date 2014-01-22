@@ -13,6 +13,7 @@ public class JavaRosCore {
 
   public static void main(String[] args) throws Exception {
     URI uri = new URI(defaultUri);
+    System.out.println("Starting ROS master on " + uri.toString());
     rosCore = RosCore.newPublic(uri.getHost(), uri.getPort());
 
     rosCore.start();
